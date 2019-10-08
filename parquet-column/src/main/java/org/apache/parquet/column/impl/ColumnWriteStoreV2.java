@@ -164,4 +164,9 @@ public class ColumnWriteStoreV2 implements ColumnWriteStore {
     }
   }
 
+  @Override
+  public boolean isColumnFlushNeeded() {
+    return rowCount + 1 >= rowCountForNextSizeCheck;
+  }
+
 }

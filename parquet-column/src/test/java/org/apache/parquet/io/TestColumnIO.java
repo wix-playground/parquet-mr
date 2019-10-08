@@ -671,6 +671,11 @@ final class ValidatingColumnWriteStore implements ColumnWriteStore {
   }
 
   @Override
+  public boolean isColumnFlushNeeded() {
+    return false;
+  }
+
+  @Override
   public void flush() {
   }
 

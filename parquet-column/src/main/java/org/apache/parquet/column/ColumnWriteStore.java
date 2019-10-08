@@ -58,4 +58,7 @@ public interface ColumnWriteStore {
    * @return a formated string representing memory usage per column
    */
   abstract public String memUsageString();
+
+  boolean isColumnFlushNeeded();
+
 }

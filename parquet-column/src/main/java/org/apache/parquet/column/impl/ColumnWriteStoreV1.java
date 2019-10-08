@@ -127,4 +127,8 @@ public class ColumnWriteStoreV1 implements ColumnWriteStore {
     // V1 does not take record boundaries into account
   }
 
+  @Override
+  public boolean isColumnFlushNeeded() {
+    return false;
+  }
 }
